@@ -989,9 +989,10 @@ resource "google_compute_instance_group_manager" "igm-rolling-update-policy" {
   update_policy {
     type                           = "PROACTIVE"
     minimal_action                 = "REPLACE"
-    <% if version == "beta" -%>
+
+<% if version == "beta" -%>
     most_disruptive_allowed_action = "REPLACE"
-    <% end -%>
+<% end -%>
     max_surge_fixed                = 0
     max_unavailable_fixed          = 2
     min_ready_sec                  = 20
