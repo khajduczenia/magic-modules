@@ -23,7 +23,7 @@ overrides: !ruby/object:Overrides::ResourceOverrides
     skip_sweeper: true
     examples:
       - !ruby/object:Provider::Terraform::Examples
-        name: "bigtable_app_profile_multicluster"
+        name: "bigtable_app_profile_anycluster"
         primary_resource_id: "ap"
         vars:
           instance_name: "bt-instance"
@@ -48,6 +48,19 @@ overrides: !ruby/object:Overrides::ResourceOverrides
           deletion_protection: "false"
         ignore_read_extra:
           - "ignore_warnings"
+      - !ruby/object:Provider::Terraform::Examples
+        name: "bigtable_app_profile_multicluster"
+        primary_resource_id: "ap"
+        vars:
+          instance_name: "bt-instance"
+          app_profile_name: "bt-profile"
+          deletion_protection: "true"
+        test_vars_overrides:
+          deletion_protection: "false"
+        oics_vars_overrides:
+          deletion_protection: "false"
+        ignore_read_extra:
+          - "ignore_warnings"
     properties:
       instance: !ruby/object:Overrides::Terraform::PropertyOverride
         diff_suppress_func: compareResourceNames
@@ -56,7 +69,8 @@ overrides: !ruby/object:Overrides::ResourceOverrides
         custom_flatten: 'templates/terraform/custom_flatten/bigtable_app_profile_routing.erb'
     custom_code: !ruby/object:Provider::Terraform::CustomCode
       encoder: templates/terraform/encoders/bigtable_app_profile.go.erb
-
+      extra_schema_entry: templates/terraform/extra_schema_entry/bigtable_app_profile.go.erb
+      pre_update: templates/terraform/pre_update/bigtable_app_profile.go.erb
 
 # This is for copying files over
 files: !ruby/object:Provider::Config::Files

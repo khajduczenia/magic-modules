@@ -25,6 +25,9 @@ module Api
       # boolean of if this binding should be generated
       attr_reader :exclude
 
+      # boolean of if this binding should be generated
+      attr_reader :exclude_validator
+
       # Character that separates resource identifier from method call in URL
       # For example, PubSub subscription uses {resource}:getIamPolicy
       # While Compute subnetwork uses {resource}/getIamPolicy
@@ -98,14 +101,15 @@ module Api
       # if set, it overrides the default iamPolicyVersion
       attr_reader :iam_policy_version
 
-      # [Optional] If true, this resource has been deprecated at GA only.
-      # This can probably be removed after `4.0.0`.
-      attr_reader :ga_deprecation
+      # [Optional] Min version to make IAM resources available at
+      # If unset, defaults to 'ga'
+      attr_reader :min_version
 
       def validate
         super
 
         check :exclude, type: :boolean, default: false
+        check :exclude_validator, type: :boolean, default: false
         check :method_name_separator, type: String, default: '/'
         check :parent_resource_type, type: String
         check :fetch_iam_policy_verb, type: Symbol, default: :GET, allowed: %i[GET POST]
@@ -117,7 +121,8 @@ module Api
         check :admin_iam_role, type: String
         check :parent_resource_attribute, type: String, default: 'id'
         check :test_project_name, type: String
-        check :iam_conditions_request_type, type: Symbol, allowed: %i[REQUEST_BODY QUERY_PARAM]
+        check :iam_conditions_request_type, type: Symbol, allowed: %i[REQUEST_BODY QUERY_PARAM
+                                                                      QUERY_PARAM_NESTED]
         check :base_url, type: String
         check :self_link, type: String
         check :import_format, type: Array, item_type: String
@@ -126,7 +131,7 @@ module Api
           type: String, default: 'templates/terraform/iam/iam_attributes.tf.erb'
         )
         check :iam_policy_version, type: String
-        check :ga_deprecation, type: :boolean, default: false
+        check :min_version, type: String
       end
     end
   end
